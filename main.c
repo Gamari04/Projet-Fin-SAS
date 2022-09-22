@@ -2,27 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-//Nous allons commencer par créer nos types de données pour les médicaments
-////void AfficherNewMedicine();
-//void MENU();
+#include <stdbool.h>
+/******************structures************************************/
 
+//Nous allons commencer par créer nos types de données pour les médicaments
 struct Medicine{
        char Code[100];
        char Nom[100];
        int Quantite;
        float Prix;
 };
-    struct Medicine medicine[100];
-
-struct Date{int j; int m; int a};
- struct Date date[100];
+/******************global variables*****************************/
+   //struct Achat Achat[100];
+   struct Medicine medicine[100];
+   struct Medicine m[1];
+   int comp=0;
+   /*******************Fonctions***********************************/
+   void cleanConsole()
+    {
+    system("cls");
+    }
 //fonction permet d'ajouter un nouveau médicament: un médicament est identifié par : son code, son nom, sa quantité, et son prix
-int comp=0;
-void AddNewMedicine(){
-   int nbr;
-   printf("entrer le nombre des medicaments :\t");
-   scanf("%d",&nbr);
-   for(int i=0;i<nbr;i++){
+   void AddNewMedicine(){
+      int nbr;
+      printf("entrer le nombre des medicaments :\t");
+      scanf("%d",&nbr);
+    for(int i=0;i<nbr;i++){
         printf("entrer les donnees du medicament %d\n\n",i+1);
         printf("entrer le Code du medicament:\t");
         scanf("%s",medicine[i].Code);
@@ -38,8 +43,7 @@ void AddNewMedicine(){
 }
 
 //cette fonction permet de lister tous les médicaments selon l’ordre alphabétique  croissant du nom.
-struct Medicine m[1];
-void TriMedicineAlphabetique(){
+  void TriMedicineAlphabetique(){
     int i,j;
 
       for(int i=0;i<comp;i++){
@@ -57,7 +61,7 @@ void TriMedicineAlphabetique(){
       AfficherNewMedicine(i);}
 }
 // cette fonction permet de lister tous les médicaments selon l’ordre  décroissant du prix.
-void TriMedicinePrix(){
+  void TriMedicinePrix(){
     int i,j;
 
       for(int i=0;i<comp;i++){
@@ -75,7 +79,7 @@ void TriMedicinePrix(){
       AfficherNewMedicine(i);}
 }
 //cette fonction permet d'afficher les nouveaux médicaments qui sont identifié par : son code, son nom, sa quantité, et son prix
-void AfficherNewMedicine(int i){
+    void AfficherNewMedicine(int i){
 
         printf(" Code du medicament: %s\n",medicine[i].Code);
         printf("Nom du medicament: %s\n",medicine[i].Nom);
@@ -91,12 +95,14 @@ void BuyMedicine(){
     scanf("%s",code);
      for(int i=0;i<comp;i++){
         if(strcmp(medicine[i].Code,code)==0){
-            printf("le Nom du medicament est : %s\n");
-            printf("la Quantite du medicament est : %d\n");
-            printf("le Prix du medicament est : %d\n");
+            printf("le Nom du medicament est : %s\n",medicine[i].Nom);
+            printf("la Quantite du medicament est : %d\n",medicine[i].Quantite);
+            printf("le Prix du medicament est : %d\n",medicine[i].Prix);
         printf("entrer la quantite a deduire du medicament: \t");
         scanf("%d",&quantite);
+          if(medicine[i].Quantite>quantite){
         medicine[i].Quantite = medicine[i].Quantite - quantite;
+          }
         printf("la quantite a deduire est : %d\n");
         printf("le prix TTC du medicament est : %f \n",medicine[i].Prix*1,15);
     }else{
@@ -108,26 +114,33 @@ void BuyMedicine(){
 void SearchMedicine(){
     char code[20];
     int quantite;
+    int trouve = 0;
     printf("entrer le Code du medicament: \t");
     scanf("%s",code);
     printf("%d\n", comp);
     for(int i=0;i<comp;i++){
         if(strcmp(medicine[i].Code,code)==0){
-            printf("le Nom du medicament est : %s\n");
-            printf("la Quantite du medicament est : %d\n");
-            printf("le Prix du medicament est : %d\n");
-        }else{
-            printf("ce Code n'existe pas\n");
+            printf("le Nom du medicament est : %s\n",medicine[i].Nom);
+            printf("la Quantite du medicament est : %d\n",medicine[i].Prix);
+            printf("le Prix du medicament est : %d\n",medicine[i].Quantite);
+            trouve = 1;
+            break;
         }
     }
+    if(trouve == 0) {
+        printf("ce Code n'existe pas\n");
+    }
+    trouve = 0;
     printf("entrer la Quantite du medicament: \t");
     scanf("%d",&quantite);
     for(int i=0;i<comp;i++){
         if(medicine[i].Quantite == &quantite){
-           printf("les produits qui ont la meme quantite sont : %d\n");
-     }else{
-         printf("cette quantite n'existe pas\n");
-     }
+           printf("les produits qui ont la meme quantite sont : %d\n", medicine[i].Nom);
+           trouve++;
+        }
+    }
+    if(trouve == 0) {
+        printf("cette quantite n'existe pas\n");
     }
 }
 //cette fonction (etat des stocks) permet d’afficher les produits dont la quantité est inférieure à 3.
@@ -148,51 +161,52 @@ void StockStatus(){
 void AddToStock(){
     char code[80];
     int quantite;
+    int trouve = 0;
     printf("entrer le code du medicament: \t");
     scanf("%s",code);
      for(int i=0;i<comp;i++){
         if(strcmp(medicine[i].Code,code)==0){
-            printf("le Nom du medicament est : %s\n");
-            printf("la Quantite du medicament est : %d\n");
-            printf("le Prix du medicament est : %d\n");
-        printf("entrer la quantite ajouter du medicament: \t");
-        scanf("%d",&quantite);
-        medicine[i].Quantite = medicine[i].Quantite + quantite;
-        printf("le Nom du medicament est : %s\n");
-        printf("la Quantite du medicament est : %d\n");
-        printf("le Prix du medicament est : %d\n");
-
-   }else{
-      printf("ce code n'existe pas \n");
+            trouve = 1;
+            printf("le Nom du medicament est : %s\n",medicine[i].Nom);
+            printf("la Quantite du medicament est : %d\n",medicine[i].Quantite);
+            printf("le Prix du medicament est : %d\n",medicine[i].Prix);
+            printf("entrer la quantite ajouter du medicament: \t");
+            scanf("%d",&quantite);
+            medicine[i].Quantite = medicine[i].Quantite + quantite;
+            printf("nouvel quantite: %d\n", medicine[i].Quantite);
    }
+   }
+   if(trouve == 0){
+        printf("ce code n'existe pas \n");
+    }
  }
-}
-void cleanConsole()
-{
-    system("cls");
-}
 //cette fonction permet de supprimer le médicament par son code
 void RemoveMedicine(){
     char code[100];
     int indice;
+    bool trouve = false;
     printf("entrer le code du medicament: \t");
     scanf("%s",code);
      for(int i=0;i<comp;i++){
         if(strcmp(medicine[i].Code,code)==0){
-            printf("le Nom du medicament est : %s\n");
-            printf("la Quantite du medicament est : %d\n");
-            printf("le Prix du medicament est : %d\n");
+            printf("le Nom du medicament est : %s\n",medicine[i].Nom);
+            printf("la Quantite du medicament est : %d\n",medicine[i].Quantite);
+            printf("le Prix du medicament est : %d\n",medicine[i].Prix);
      indice=i;
+            trouve = true;
     }
      }
-     for(int i=indice;i<comp;i++){
+     if(trouve == true) {
+        for(int i=indice;i<comp;i++){
             strcpy(medicine[indice].Code,medicine[indice+1].Code);
             strcpy(medicine[indice].Nom,medicine[indice+1].Nom);
             (medicine[indice].Quantite,medicine[indice+1].Quantite);
             (medicine[indice].Prix,medicine[indice+1].Prix);
-            comp--;
+        }
+        comp--;
      }
 }
+
 void backToMenu(){
    int l;
    printf("Appuyer sur un nombre pour retourner au menu : ");scanf("%d",&l);
@@ -212,6 +226,7 @@ void MENU(){
             printf("\n                      5-/ Etat du stock");
             printf("\n                      6-/ Alimenter le stock");
             printf("\n                      7-/ Supprimer un medicament");
+            printf("\n                      8-/ Statistiques des medicaments");
             printf("\n \t\t\t\tEntrer votre choix :");
             scanf("%d",&choix);
             system("cls");
@@ -253,11 +268,12 @@ void MENU(){
               break;
 
           case 7:
-          RemoveMedicine();
-          backToMenu();
-          break;
+              RemoveMedicine();
+              backToMenu();
+              break;
+
         }
-        }while(choix>7 || choix<0);
+        }while(choix>8 || choix<0);
     }
 
 void Operationlister(){
